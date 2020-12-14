@@ -1,12 +1,7 @@
-import env as env
 import requests
 from urllib.parse import urlparse
 
 from environs import Env
-
-
-TOKEN = env.str("BITLY_TOKEN")
-HEADERS = {"Authorization": f"Bearer {TOKEN}"}
 
 
 def shorten_link(users_link):
@@ -27,6 +22,7 @@ def count_clicks(short_link):
     total_clicks.raise_for_status()
     return total_clicks.json()["total_clicks"]
 
+
 def check_if_binlink(short_link):
     parsed_link = urlparse(short_link)
     url = f"https://api-ssl.bitly.com/v4/bitlinks/{parsed_link.netloc}{parsed_link.path}"
@@ -37,6 +33,9 @@ def check_if_binlink(short_link):
 if __name__ == "__main__":
     env = Env()
     env.read_env()
+
+    TOKEN = env.str("BITLY_TOKEN")
+    HEADERS = {"Authorization": f"Bearer {TOKEN}"}
 
     users_link = input("Введите адрес сайта: ")
     if check_if_binlink(users_link):
