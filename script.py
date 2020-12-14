@@ -10,7 +10,7 @@ def shorten_link(users_link):
         "long_url": users_link,
         "domain": "bit.ly",
     }
-    short_site = requests.post(url, headers=HEADERS, json=body)
+    short_site = requests.post(url, headers=headers, json=body)
     short_site.raise_for_status()
     return short_site.json()["link"]
 
@@ -18,7 +18,7 @@ def shorten_link(users_link):
 def count_clicks(short_link):
     parsed_link = urlparse(short_link)
     url = f"https://api-ssl.bitly.com/v4/bitlinks/{parsed_link.netloc}{parsed_link.path}/clicks/summary"
-    total_clicks = requests.get(url, headers=HEADERS)
+    total_clicks = requests.get(url, headers=headers)
     total_clicks.raise_for_status()
     return total_clicks.json()["total_clicks"]
 
@@ -26,7 +26,7 @@ def count_clicks(short_link):
 def check_if_binlink(short_link):
     parsed_link = urlparse(short_link)
     url = f"https://api-ssl.bitly.com/v4/bitlinks/{parsed_link.netloc}{parsed_link.path}"
-    info_link = requests.get(url, headers=HEADERS)
+    info_link = requests.get(url, headers=headers)
     return info_link.ok
 
 
@@ -34,8 +34,8 @@ if __name__ == "__main__":
     env = Env()
     env.read_env()
 
-    TOKEN = env.str("BITLY_TOKEN")
-    HEADERS = {"Authorization": f"Bearer {TOKEN}"}
+    token = env.str("BITLY_TOKEN")
+    headers = {"Authorization": f"Bearer {token}"}
 
     users_link = input("Введите адрес сайта: ")
     if check_if_binlink(users_link):
