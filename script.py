@@ -1,5 +1,6 @@
 import requests
 from urllib.parse import urlparse
+import argparse
 
 from environs import Env
 
@@ -34,10 +35,15 @@ if __name__ == "__main__":
     env = Env()
     env.read_env()
 
+    parser = argparse.ArgumentParser(description="Сокращает исходную ссылку")
+    parser.add_argument('link', help='Введите ссылку: ')
+    args = parser.parse_args()
+
+    users_link = args.link
+
     token = env.str("BITLY_TOKEN")
     headers = {"Authorization": f"Bearer {token}"}
 
-    users_link = input("Введите адрес сайта: ")
     if check_if_binlink(users_link):
         try:
             clicks_count = count_clicks(users_link)
